@@ -1,0 +1,165 @@
+model FixedCharge
+  uses "mmxprs"
+  uses "mminsight" ! uncomment this line for an Xpress Insight model
+
+  declarations
+    I = 1..434
+    J = 1..434
+    K = 1..3
+    d: array(J) of real ! demand in square j
+    T: array(K) of real ! cost of placing type k charging point
+    E: array(K) of real ! kwh/year of type k charging point
+    x: array(I,J) of mpvar ! whether deman in j is met by facility in i
+    y: array(I,K) of mpvar ! number of each type k charging points in the facility grid i
+    w: array(I) of mpvar ! whether or not to open a facility in grid i
+    mu: array(I,J) of real !distance between grid i and grid j - used as cost of fulfilling demand
+    eta: array(I) of real ! weighted distance of grid square i from city centre
+    P: real ! amount of demand to fulfill, decimal
+    R: real ! minimum ratio of fast chargers
+    C: array(I,K) of integer ! current charging points
+    G: array(I) of integer  ! whether or not a potential charging points exists in grid square i
+    phi: real ! discount of setting up charging station at potential locations
+    FileName: string ! name of output file
+  end-declarations
+
+initialisations from "data_full.txt"
+  T
+end-initialisations
+
+initialisations from "P.txt"
+  P
+end-initialisations
+
+  initialisations from "R.txt"
+    R
+  end-initialisations
+  initialisations from "E.txt"
+    E
+  end-initialisations
+
+  initialisations from "phi.txt"
+    phi
+  end-initialisations
+
+  initialisations from "d3.txt"
+    d
+  end-initialisations
+
+  initialisations from "mu.txt"
+    mu
+  end-initialisations
+
+  initialisations from "G.txt"
+    G
+  end-initialisations
+
+  initialisations from "eta.txt"
+    eta
+  end-initialisations
+
+  initialisations from "FileName.txt"
+    FileName
+  end-initialisations
+
+forall(j in J) do
+  if d(j) >0 then
+    sum(i in I) x(i,j) >=1
+  end-if
+
+end-do
+
+  forall(i in I, j in J) x(i,j) <= w(i) + sum(k in K) C(i,k) ! facility in I must be open for demand to be fulfilled from there
+
+
+  P* sum(j in J) d(j) <= sum(i in I, k in K) (y(i,k)+C(i,k))*E(k) ! minimum amount of demand that must be fulfilled
+
+  forall(i in I) sum(j in J) P * x(i,j) * d(j) <= sum(k in K) (y(i,k)+C(i,k))*E(k) ! local minimum demand
+
+  forall(j in J) do
+    if d(j) = 0 then
+      w(j) <= 0
+    end-if
+  end-do
+
+  ! forall(i in I) sum(j in J_d | mu(i,j)<=3) d(j) * x(i,j) <= sum(k in K) y(i,k)*E(k) ! local demand fulfillment constraint
+
+  ! forall(i in I, j in J) do
+  !   if mu(i,j) >3 then
+  !     x(i,j)<=0
+  !   end-if
+  ! end-do
+  ! w(1) = 0
+
+  forall(i in I) sum(k in K) (y(i,k)+C(i,k)) <= eta(i)*w(i) ! not too many charging points in one grid square to prevent congestion
+
+  forall(i in I) sum(k in K) y(i,k) >= w(i)
+
+  !diversificaiton:
+  ! forall(k in K) sum(i in I) y(i,k) <= sum(i in I, l in K) 0.5*y(i,l)
+  ! ! no type of charging point exceeds 50% of total amount
+
+  ! forall(k in K) sum(i in I) y(i,k) >= sum(i in I, l in K) 0.2*y(i,l)
+  ! ! no type of charging point should account for less than 20% of total amount
+  sum(i in I) y(i,2) >= sum(i in I, k in K) R*y(i,k)
+  sum(i in I) y(i,1) = 0 ! no slow chargers
+  ! sum(i in I) y(i,3) = 0 ! no rapid chargers
+  ! forall(i in I) sum(k in K) y(i,k) <= 0.1 * sum(a in I, k in K) y(a,k)
+
+
+  forall(i in I) w(i) is_binary
+  forall(i in I, j in J) x(i,j) is_binary
+  forall(i in I, k in K) y(i,k) is_integer
+
+
+
+
+  obj := sum(i in I, k in K)( y(i,k)*T(k)) + sum(i in I, j in J) (mu(i,j)*x(i,j) ) + sum(i in I)(w(i)-phi*G(i))
+  setparam("XPRS_MAXTIME",600)
+
+
+  minimise(obj)
+
+
+  ! writeln(getobjval)
+  ! writeln(getsol(sum(i in I, j in J) (d(j)*mu(i,j)*x(i,j) )))
+  ! writeln(sum(i in I, j in J) mu(i,j)*getsol(x(i,j)))
+
+  ! forall(i in I, j in J) do
+  !   if(mu(i,j)*getsol(x(i,j))) > 0 then
+  !     writeln(i,",",j,",",mu(i,j)*getsol(x(i,j)))`
+  !   end-if
+  ! end-do
+
+  ! writeln(getsol(sum(i in I, j in J) x(i,j)) - sum(i in I) getsol(w(i)))
+
+  fopen(FileName,F_OUTPUT)
+    writeln("Grid Number, Slow, Fast, Rapid")
+    forall(i in I) do
+      if(sum(k in K) getsol(y(i,k)) >0) then
+        writeln(i,",",getsol(y(i,1)),",",getsol(y(i,2)),",",getsol(y(i,3)))
+      end-if
+
+    end-do
+    ! writeln("Total cost: ,£ ", getsol(sum(a in I, c in K)( y(a,c)*T(c)))/1e3,", thousand")
+    writeln("Relative Gap: ,",getrelgap)
+
+  fclose(F_OUTPUT)
+
+
+
+if getprobstat = XPRS_INF then
+writeln("infeasible")
+end-if
+
+if getprobstat = XPRS_UBND then
+writeln("unbounded")
+end-if
+writeln(getrelgap)
+
+! fopen("Fixed_Charge_y.csv",F_OUTPUT)
+!   forall(i in I) do
+!     writeln(i,",",getsol(y(i,1)),",",getsol(y(i,2)),",",getsol(y(i,3)))
+!   end-do
+! fclose(F_OUTPUT)
+
+end-model

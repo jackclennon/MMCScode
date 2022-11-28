@@ -1,0 +1,30 @@
+<!--
+    Quick start template for Mosel based Xpress Insight applications.
+-->
+<vdl version="4.7">
+    <vdl-page>
+        <vdl-section heading="Section">
+            <vdl-row>
+                <vdl-column><span vdl-text="Insert VDL markup here."></span></vdl-column>
+            </vdl-row>
+        </vdl-section>
+        <vdl-section heading="Example: Data input">
+            <vdl-row>
+                <vdl-column>
+                    <span style="height:30px;" vdl-text="Running the scenario will multiple all elements of the
+                    Input Array by My Integer. The result can be viewed by navigating to the Results view."></span>
+                </vdl-column>
+            </vdl-row>
+            <vdl-row>
+                <vdl-column size="6">
+                    <vdl-form>
+                        <vdl-field entity="MyInteger" label-size="4"></vdl-field>
+                    </vdl-form>
+                    <vdl-table>
+                        <vdl-table-column entity="Input" editable="true"></vdl-table-column>
+                    </vdl-table>
+                </vdl-column>
+            </vdl-row>
+        </vdl-section>
+    </vdl-page>
+</vdl>

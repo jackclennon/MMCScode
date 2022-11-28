@@ -1,0 +1,74 @@
+(!
+    Quick start template for Mosel based Xpress Insight applications.
+!)
+model "Quick Start"
+    version 2.0.0
+
+    options noimplicit
+
+    uses "mminsight"
+
+    ! The input data model for the scenario.
+    !@insight.manage input
+    public declarations
+        !@insight.alias My Integer
+        MyInteger: integer
+
+        !@insight.alias Array Indices
+        Indices: range
+
+        !@insight.alias Input Array
+        Input: array(Indices) of integer
+    end-declarations
+
+    ! The result data model for the scenario.
+    !@insight.manage result
+    public declarations
+        ! Insert declarations of entities that are calculated by the model.
+        !@insight.alias Result Array
+        Result: array(Indices) of real
+    end-declarations
+
+    !@doc.descr Handler for the standard LOAD execution mode
+    !@doc.descr Load input data and initialize all input entities.
+    !@insight.execmodes.LOAD
+    public procedure loaddata
+        ! Initialize the input entities from a data source.
+        initializations from "mmsheet.csv:skiph;input.csv"
+            Input as '[A:B]'
+        end-initializations
+
+        MyInteger := Indices.size
+    end-procedure
+
+    !@doc.descr Handler for the standard RUN execution mode
+    !@doc.descr Calculate result data and initialize all result entities.
+    !@insight.execmodes.RUN
+    public procedure calculateresults
+        ! initialize from scenario data when run within Insight
+        insightpopulate
+        forall(i in Indices) Result(i) := Input(i) * MyInteger
+    end-procedure
+
+    !@doc.descr Handler for a custom execution mode
+   (!@insight.execmodes.CUSTOMRUN.
+        @clearinput false
+    !)
+    public procedure customrunmode
+       ! initialize from scenario data when run within Insight
+        insightpopulate
+        forall(i in Indices) Result(i) := Input(i) * MyInteger * 0.5
+    end-procedure
+
+    !@doc.descr Handler for when the model is executed outside of Insight
+    !@insight.execmodes.NONE
+    public procedure standalone
+        loaddata
+        calculateresults
+    end-procedure
+
+    insightdispatch
+
+    ! This code executes after the execution mode handler has finished successfully.
+    writeln("\nFinished.")
+end-model

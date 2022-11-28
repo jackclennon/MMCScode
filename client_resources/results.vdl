@@ -1,0 +1,46 @@
+<!--
+    Quick start template for Mosel based Xpress Insight applications.
+-->
+<vdl version="4.7">
+    <vdl-page>
+        <vdl-header>
+            <vdl-action-group name="executeLoad">
+                <vdl-action-execute mode="LOAD"></vdl-action-execute>
+            </vdl-action-group>
+            <vdl-action-group name="executeRun">
+                <vdl-action-execute></vdl-action-execute>
+            </vdl-action-group>
+            <vdl-action-group name="executeCustomRun">
+                <vdl-action-execute mode="CUSTOMRUN"></vdl-action-execute>
+            </vdl-action-group>
+        </vdl-header>
+        <vdl-section heading="='Results for ' + scenario.props.name">
+            <vdl-row>
+                <vdl-column><span vdl-text="Insert VDL markup here."></span></vdl-column>
+            </vdl-row>
+        </vdl-section>
+        <vdl-section heading="Example: Model execution">
+            <vdl-row>
+                <vdl-column size="12">
+                    <vdl-container>
+                        <vdl-button label="Load scenario" vdl-event="click: actions.executeLoad"></vdl-button>
+                        <vdl-button label="Run scenario" vdl-event="click: actions.executeRun"></vdl-button>
+                        <vdl-button label="Custom run mode" vdl-event="click: actions.executeCustomRun"></vdl-button>
+                    </vdl-container>
+                </vdl-column>
+            </vdl-row>
+        </vdl-section>
+        <vdl-section heading="Example: Displaying results">
+            <vdl-row>
+                <vdl-column vdl-if="=scenario.summaryData.hasResultData" size="6">
+                    <vdl-table>
+                        <vdl-table-column entity="Input"></vdl-table-column>
+                        <vdl-table-column entity="Result"></vdl-table-column>
+                    </vdl-table>
+                </vdl-column>
+                <vdl-column vdl-if="=!scenario.summaryData.hasResultData" size="6"><span vdl-text="Conditional logic is used here to show this message when
+                    the scenario has no results. Run the scenario to see the results."></span></vdl-column>
+            </vdl-row>
+        </vdl-section>
+    </vdl-page>
+</vdl>

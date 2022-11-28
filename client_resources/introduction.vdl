@@ -1,0 +1,30 @@
+<!--
+    Quick start template for Mosel based Xpress Insight applications.
+-->
+<vdl version="4.7">
+    <vdl-page>
+        <link rel="stylesheet" href="css/welcome_template.css">
+        <vdl-section id="welcome" layout="fluid">
+            <vdl-row>
+                <vdl-column size="7">
+                    <h1>Welcome to your app</h1>
+                    <button type="button" class="btn btn-secondary" onclick="insight.openView('Input');">Lets get started!</button>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut mattis lacus. Aenean sit amet vehicula lacus. Vivamus sapien turpis, volutpat quis cursus nec, egestas ac velit. Cras molestie purus non mauris auctor, ut mollis ligula rhoncus. Quisque sit amet nibh et sapien dictum gravida at sed velit. Phasellus vel suscipit velit. Vivamus nisi mauris, efficitur id finibus ac, accumsan vel dolor. Proin consequat arcu quis lectus sodales finibus. Proin vitae venenatis metus. Proin hendrerit bibendum velit. Pellentesque luctus, nunc in placerat commodo, urna sapien condimentum tortor, eu tincidunt quam tellus a metus. Nunc posuere tellus convallis, varius felis ac, pulvinar sem. Etiam dui tellus, efficitur ullamcorper fringilla et, pharetra in ligula.</p>
+                    <p>Quisque cursus tortor lectus, et ullamcorper leo feugiat ut. In sit amet fringilla turpis, sed sagittis augue. Fusce ac vehicula ex. Fusce eu turpis id nisl rhoncus posuere nec id felis. Ut quis nulla sit amet ex accumsan porta ac in dui. Maecenas tempus malesuada justo, efficitur pellentesque enim convallis a. Pellentesque varius a massa in varius. Sed gravida vitae nisi ut feugiat. Phasellus venenatis, libero id pulvinar suscipit, ligula augue tincidunt lorem, nec gravida nisi ligula at nisl. Curabitur in dapibus dolor. Fusce aliquam, ipsum vel fermentum porttitor, eros diam blandit nulla, eget faucibus diam purus quis quam. In rutrum blandit aliquam. Cras vestibulum, mi ac pulvinar dapibus, ipsum ligula suscipit tellus, vitae ultrices ligula odio non orci.</p>
+                    <p>Phasellus mollis eros eu lectus tempor iaculis. Aenean nec diam et ligula semper cursus ut ac tellus. Maecenas et orci sit amet lorem commodo pharetra at id orci. Nunc ut ex sapien. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti. Phasellus iaculis, massa ac feugiat scelerisque, elit mi placerat nulla, ac congue sem risus eu ex. Maecenas odio tellus, facilisis et sem ac, congue blandit risus. Donec vitae iaculis nisl.</p>
+                    <p>Phasellus vitae nisi sed libero pretium aliquet non eu lorem. Mauris finibus mi sit amet purus eleifend, a posuere libero dignissim. Suspendisse ornare diam in lorem convallis elementum sed eget orci. Aliquam tincidunt aliquet nibh sit amet mollis. Vivamus eu nulla et magna sodales sodales. Cras sit amet lacus tempor, commodo nisi vel, dapibus erat. Donec eu tellus in velit scelerisque ultrices quis eu mi. Cras varius ligula non vulputate faucibus. Nulla facilisi. Vestibulum pretium mollis hendrerit. Aenean leo lorem, fringilla id lorem quis, scelerisque cursus metus.</p>
+
+                    <button type="button" class="btn btn-secondary" onclick="insight.openView('Input');">Lets get started!</button>
+                </vdl-column>
+                <vdl-column id="welcome_image_column" size="5">
+                    <div id="welcome_image">
+                        <img alt="fico" src="images/welcome.jpg">
+                        <div class="caption">Your image here</div>
+                    </div>
+                    <div id="filler"></div>
+                </vdl-column>
+            </vdl-row>
+        </vdl-section>
+    </vdl-page>
+</vdl>
